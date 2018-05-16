@@ -36,8 +36,23 @@ elif contract_date[3:5] == "11":
 elif contract_date[3:5] == "12":
     month_by_word = "грудня"
 
-date_by_word = contract_date[0:1] + " " + month_by_word + " " + contract_date[6:10]
+date_by_word = contract_date[0:2] + " " + month_by_word + " " + contract_date[6:10]
 #date by word for replacing date instide in contract
+
+c_name = "1"
+c_passport_id = "2"
+c_passport_address = "3"
+c_passport_date = "4"
+c_address = "5"
+c_fop_address = "6"
+c_id = "7"
+c_bank = "8"
+c_bank_info = "9"
+c_person_bank_info = "10"
+c_fop_id = "11"
+c_fop_id_date = "12"
+c_born = "13"
+#need for future functional. Now only like test
 
 def text_replace(old_text, new_text, file):
     doc = Document(file)
@@ -51,6 +66,18 @@ def text_replace(old_text, new_text, file):
                     line.text = text
     doc.save(new_file)
 
-text_replace("Директора", "Юрій", template)
-text_replace("Petro", "Іван", new_file)
-text_replace("dfdfdj", "Hello world", new_file)
+text_replace("${Contract date}", date_by_word, template)
+text_replace("${Name}", c_name, new_file)
+text_replace("${Passport ID}", c_passport_id, new_file)
+text_replace("${Passport address}", c_passport_address, new_file)
+text_replace("${Passport date}", c_passport_date, new_file)
+text_replace("${Address}", c_address, new_file)
+text_replace("${FOP address}", c_fop_address, new_file)
+text_replace("${ID}", c_id, new_file)
+text_replace("${Bank}", c_bank, new_file)
+text_replace("${Bank info}", c_bank_info, new_file)
+text_replace("${Person bank info}", c_person_bank_info, new_file)
+text_replace("${FOP ID}", c_fop_id, new_file)
+text_replace("${FOP ID date}", c_fop_id_date, new_file)
+text_replace("${Born}", c_born, new_file)
+#to replace everything that you need in the template
