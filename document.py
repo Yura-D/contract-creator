@@ -8,7 +8,8 @@ contract_date = input("Please type the date of contract (Example - 08.05.2018):\
 
 file_name_date = contract_date[6:10] + contract_date[2:6] + contract_date[0:2]
 new_file = file_name_date + "-" + str(template)
-#to create the file name with revers position of date
+# to create the file name with revers position of date
+
 
 def get_month(contract_date):
     return {
@@ -26,10 +27,11 @@ def get_month(contract_date):
         "12": "грудня"
     }.get(contract_date[3:5])
 
+
 month_by_word = get_month(contract_date)
 
 date_by_word = contract_date[0:2] + " " + month_by_word + " " + contract_date[6:10]
-#date by word for replacing date instide in contract
+# date by word for replacing date instide in contract
 
 c_name = "test1"
 c_passport_id = "test2"
@@ -44,7 +46,8 @@ c_person_bank_info = "test10"
 c_fop_id = "test11"
 c_fop_id_date = "test12"
 c_born = "test13"
-#need for future functional. Now only like test
+# need for future functional. Now only like test
+
 
 def text_replace(old_text, new_text, file):
     doc = Document(file)
@@ -57,6 +60,7 @@ def text_replace(old_text, new_text, file):
                     text = line.text.replace(old_text, new_text)
                     line.text = text
     doc.save(new_file)
+
 
 text_replace("${Contract date}", date_by_word, template)
 text_replace("${Name}", c_name, new_file)
@@ -72,5 +76,4 @@ text_replace("${Person bank info}", c_person_bank_info, new_file)
 text_replace("${FOP ID}", c_fop_id, new_file)
 text_replace("${FOP ID date}", c_fop_id_date, new_file)
 text_replace("${Born}", c_born, new_file)
-#to replace everything that you need in the template
-
+# to replace everything that you need in the template
