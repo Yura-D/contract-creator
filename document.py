@@ -11,16 +11,61 @@ client = gspread.authorize(creds)
 
 sheet = client.open("employee's info").sheet1
 
+title_name = sheet.findall("ПІБ як в паспорті")
+if len(title_name) > 1:
+    print("There are more than one cell with - ПІБ як в паспорті:\n", title_name)
+    print("Please change it in Google sheet")
+    quit()
+else: 
+    title_name = str(title_name)
+
+parts_title_name = title_name.split()
+part_pos = parts_title_name[1]
+c_position = part_pos.find("C")
+number_column_name = part_pos[c_position+1:]
+
+
+column_names = sheet.col_values(number_column_name)
+
 search = input("Find the emploee (enter full name): ")
+
+search_result = list()
+
+
+while True:
+    for name in column_names[1:]:
+        if search in name:
+            search_result.append(name)
+            
+    if len(search_result) == 0:
+        print("We don't found: ", search)
+        search = ""
+        search = input("Please try one more time: ")
+    elif len(search_result) > 1:
+        print(search_result)
+        search = ""
+        search = input("There is more than one result. Please Try again: ")
+    else:
+        print(search_result)
+
+#1 коли більше двох результатів проситься уточнити пошук та набрати ще раз інпут
+#2 коли немає такого результату проситься повторити пошук
+#3 дозволяти робити пошук і з малих букв
 
 
 unit = sheet.findall(search)
+
+#складність в тому, що я дізнаюся колонку і саме прізвище, а мені треба дізнатися
+#рядок, щоб можна було з нього витягувати відповідні дані. Однак мінус того, що потрібно 
+#завдли дізнаватися колонку з тайтлом
+
 unit = str(unit)
 row_unit = unit.split("[<Cell R")
 row_unit = row_unit[1].split("C")
 row_number = row_unit[0]
 # make better pursing of row number
 
+"""
 contract_date = input("Please type the date of contract (Example - 08.05.2018):\n")
 
 def get_month(contract_date):
@@ -91,11 +136,13 @@ for template in templates:
     text_replace("${Passport date}", c_passport_date, new_file)
     text_replace("${Address}", c_address, new_file)
     text_replace("${FOP address}", c_fop_address, new_file)
-    text_replace("${ID}", c_id, new_file)
-    text_replace("${Bank}", c_bank, new_file)
-    text_replace("${Bank info}", c_bank_info, new_file)
+    text_replace("${ID}"              , c_id, new_file)
+    text_replace("${Bank}"            , c_bank, new_file)
+    text_replace("${Bank info}"       , c_bank_info, new_file)
     text_replace("${Person bank info}", c_person_bank_info, new_file)
-    text_replace("${FOP ID}", c_fop_id, new_file)
-    text_replace("${FOP ID date}", c_fop_id_date, new_file)
+    text_replace("${FOP ID}"          , c_fop_id, new_file)
+    text_replace("${FOP ID date}"     , c_fop_id_date, new_file)
     text_replace("${Born}", c_born, new_file)
     # to replace everything that you need in the template
+
+    """
