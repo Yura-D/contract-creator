@@ -29,24 +29,26 @@ column_names = sheet.col_values(number_column_name)
 
 search = input("Find the emploee (enter full name): ")
 
-search_result = list()
+search_results = list()
 
 
 while True:
     for name in column_names[1:]:
         if search in name:
-            search_result.append(name)
+            search_results.append(name)
             
-    if len(search_result) == 0:
+    if len(search_results) == 0:
         print("We don't found: ", search)
-        search = ""
+        del search_results[:]
         search = input("Please try one more time: ")
-    elif len(search_result) > 1:
-        print(search_result)
-        search = ""
+    elif len(search_results) > 1:
+        for result in search_results:
+            print("-", result)
+        del search_results[:]
         search = input("There is more than one result. Please Try again: ")
     else:
-        print(search_result)
+        print("-", search_results[0])
+        break
 
 #1 коли більше двох результатів проситься уточнити пошук та набрати ще раз інпут
 #2 коли немає такого результату проситься повторити пошук
