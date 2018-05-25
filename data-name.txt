@@ -1,5 +1,8 @@
 ПІБ як в паспорті = ${Name}
 Серіяномер паспорта = ${Passport ID}
+Серія паспорта букви = ${Passport ID letter}
+Серія паспорта цифри = ${Passport ID number}
+
 ким виданий паспорт = ${Passport address}
 коли виданий паспорт = ${Passport date}
 Прописка = ${Address}

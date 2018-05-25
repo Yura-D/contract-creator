@@ -18,6 +18,7 @@ if len(title_name) > 1:
     quit()
 else: 
     title_name = str(title_name)
+# checker that title on it place
 
 parts_title_name = title_name.split()
 part_pos = parts_title_name[1]
@@ -81,19 +82,7 @@ month_by_word = get_month(contract_date)
 date_by_word = contract_date[0:2] + " " + month_by_word + " " + contract_date[6:10]
 # date by word for replacing date instide in contract
 
-#c_name = sheet.cell(row_number, 2).value
-c_passport_id = sheet.cell(row_number, 4).value
-c_passport_address = sheet.cell(row_number, 5).value
-c_passport_date = sheet.cell(row_number, 7).value
-c_address = sheet.cell(row_number, 8).value
-c_fop_address = sheet.cell(row_number, 9).value
-c_id = sheet.cell(row_number, 11).value
-c_bank = sheet.cell(row_number, 12).value
-c_bank_info = sheet.cell(row_number, 14).value
-c_person_bank_info = sheet.cell(row_number, 15).value
-c_fop_id = sheet.cell(row_number, 16).value
-c_fop_id_date = sheet.cell(row_number, 17).value
-c_born = sheet.cell(row_number, 21).value
+unit = sheet.row_values(row_number)
 
 
 def text_replace(old_text, new_text, file):
@@ -116,18 +105,22 @@ for template in templates:
     new_file = file_name_date + "-" + str(template)
     # to create the file name with revers position of date
 
-    text_replace("${Contract date}", date_by_word, template)
-    text_replace("${Name}", search_results[0], new_file)
-    text_replace("${Passport ID}", c_passport_id, new_file)
-    text_replace("${Passport address}", c_passport_address, new_file)
-    text_replace("${Passport date}", c_passport_date, new_file)
-    text_replace("${Address}", c_address, new_file)
-    text_replace("${FOP address}", c_fop_address, new_file)
-    text_replace("${ID}"              , c_id, new_file)
-    text_replace("${Bank}"            , c_bank, new_file)
-    text_replace("${Bank info}"       , c_bank_info, new_file)
-    text_replace("${Person bank info}", c_person_bank_info, new_file)
-    text_replace("${FOP ID}"          , c_fop_id, new_file)
-    text_replace("${FOP ID date}"     , c_fop_id_date, new_file)
-    text_replace("${Born}", c_born, new_file)
+    text_replace("${Contract date}",        date_by_word, template)
+    text_replace("${Name}",                 search_results[0], new_file)
+    text_replace("${Passport ID}",          unit[3], new_file)
+    text_replace("${Passport ID letter}",   unit[3][0:2], new_file)
+    text_replace("${Passport ID number}",   unit[3][2:], new_file)
+    text_replace("${Passport address}",     unit[4], new_file)
+    text_replace("${Passport date}",        unit[6], new_file)
+    text_replace("${Address}",              unit[7], new_file)
+    text_replace("${FOP address}",          unit[8], new_file)
+    text_replace("${ID}",                   unit[10], new_file)
+    text_replace("${Bank}",                 unit[11], new_file)
+    text_replace("${Bank info}",            unit[13], new_file)
+    text_replace("${Person bank info}",     unit[14], new_file)
+    text_replace("${FOP ID}",               unit[15], new_file)
+    text_replace("${FOP ID date}",          unit[16], new_file)
+    text_replace("${Born}",                 unit[20], new_file)
 # to replace everything that you need in the template
+
+print("Done")
