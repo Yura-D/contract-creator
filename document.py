@@ -33,10 +33,10 @@ search_results = list()
 
 
 while True:
-    for name in column_names[1:]:
+    for name in column_names[1:]:  
         if search in name:
             search_results.append(name)
-            
+           
     if len(search_results) == 0:
         print("We don't found: ", search)
         del search_results[:]
@@ -50,24 +50,13 @@ while True:
         print("-", search_results[0])
         break
 
-#1 коли більше двох результатів проситься уточнити пошук та набрати ще раз інпут
-#2 коли немає такого результату проситься повторити пошук
-#3 дозволяти робити пошук і з малих букв
+row_number = 0
+for name in column_names:
+    row_number = row_number + 1
+    if name == search_results[0]:
+        break
 
 
-unit = sheet.findall(search)
-
-#складність в тому, що я дізнаюся колонку і саме прізвище, а мені треба дізнатися
-#рядок, щоб можна було з нього витягувати відповідні дані. Однак мінус того, що потрібно 
-#завдли дізнаватися колонку з тайтлом
-
-unit = str(unit)
-row_unit = unit.split("[<Cell R")
-row_unit = row_unit[1].split("C")
-row_number = row_unit[0]
-# make better pursing of row number
-
-"""
 contract_date = input("Please type the date of contract (Example - 08.05.2018):\n")
 
 def get_month(contract_date):
@@ -92,7 +81,7 @@ month_by_word = get_month(contract_date)
 date_by_word = contract_date[0:2] + " " + month_by_word + " " + contract_date[6:10]
 # date by word for replacing date instide in contract
 
-c_name = sheet.cell(row_number, 2).value
+#c_name = sheet.cell(row_number, 2).value
 c_passport_id = sheet.cell(row_number, 4).value
 c_passport_address = sheet.cell(row_number, 5).value
 c_passport_date = sheet.cell(row_number, 7).value
@@ -127,12 +116,8 @@ for template in templates:
     new_file = file_name_date + "-" + str(template)
     # to create the file name with revers position of date
 
-
-
-
-
     text_replace("${Contract date}", date_by_word, template)
-    text_replace("${Name}", c_name, new_file)
+    text_replace("${Name}", search_results[0], new_file)
     text_replace("${Passport ID}", c_passport_id, new_file)
     text_replace("${Passport address}", c_passport_address, new_file)
     text_replace("${Passport date}", c_passport_date, new_file)
@@ -145,6 +130,4 @@ for template in templates:
     text_replace("${FOP ID}"          , c_fop_id, new_file)
     text_replace("${FOP ID date}"     , c_fop_id_date, new_file)
     text_replace("${Born}", c_born, new_file)
-    # to replace everything that you need in the template
-
-    """
+# to replace everything that you need in the template
