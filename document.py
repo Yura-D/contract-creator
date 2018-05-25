@@ -60,6 +60,7 @@ for name in column_names:
 
 contract_date = input("Please type the date of contract (Example - 08.05.2018):\n")
 
+
 def get_month(contract_date):
     return {
         "01": "січня",
@@ -99,8 +100,31 @@ def text_replace(old_text, new_text, file):
 
 
 templates = ["test.docx", "Згода на обробку персональних даних.docx"]
+# You can put above the names of template files and it will work with it
 
-for template in templates:
+
+templates_count = 0
+
+templates_dict = dict()
+
+print("\nTemplates: ")
+for example in templates:
+    templates_count = templates_count + 1
+    templates_dict[str(templates_count)] = example
+    print(templates_count, "-", example)
+# for printing the list of all templates and create the dict with this tampletes and number of choosing
+
+get_file = input("Please choose the files you want to fill (Example: \"1 5 12\"):\n")
+
+choose = get_file.split()
+
+templates_choose = list()
+
+for number_choose in choose:
+    templates_choose.append(templates_dict.get(number_choose))
+# for choosing templates
+
+for template in templates_choose:
     file_name_date = contract_date[6:10] + contract_date[2:6] + contract_date[0:2]
     new_file = file_name_date + "-" + str(template)
     # to create the file name with revers position of date
