@@ -28,7 +28,7 @@ number_column_name = part_pos[c_position+1:]
 
 column_names = sheet.col_values(number_column_name)
 
-search = input("Find the emploee (enter full name): ")
+search = input("Find the emploee: ")
 
 search_results = list()
 
@@ -58,7 +58,37 @@ for name in column_names:
         break
 
 
-contract_date = input("Please type the date of contract (Example - 08.05.2018):\n")
+while True:
+    contract_date = input("Please type the date of contract (Example - 08.05.2018):\n")
+    if len(contract_date) != 10:
+        print("Incorrect format")
+        continue
+    elif int(contract_date[0:2]) > 31:
+        print("Incorrect format")
+        continue
+    elif int(contract_date[0:2]) == 0:
+        print("Incorrect format")
+        continue
+    elif int(contract_date[3:5]) > 12:
+        print("Incorrect format")
+        continue
+    elif int(contract_date[3:5]) == 0:
+        print("Incorrect format")
+        continue      
+    elif contract_date[2] != ".":
+        print("Incorrect format")
+        continue
+    elif contract_date[5] != ".":
+        print("Incorrect format")
+        continue
+    elif int(contract_date[6:]) > 2050:
+        print("Incorrect format")
+        continue
+    elif int(contract_date[6:]) < 2000:
+        print("Incorrect format")
+        continue
+    else:
+        break
 
 
 def get_month(contract_date):
