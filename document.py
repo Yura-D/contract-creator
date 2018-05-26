@@ -124,6 +124,12 @@ for number_choose in choose:
     templates_choose.append(templates_dict.get(number_choose))
 # for choosing templates
 
+if len(unit[8]) < 1:
+    fop_address = unit[7]
+else:
+    fop_address = unit[8]
+# for using Address if there not FOP Address
+
 for template in templates_choose:
     file_name_date = contract_date[6:10] + contract_date[2:6] + contract_date[0:2]
     new_file = file_name_date + "-" + str(template)
@@ -137,7 +143,7 @@ for template in templates_choose:
     text_replace("${Passport address}",     unit[4], new_file)
     text_replace("${Passport date}",        unit[6], new_file)
     text_replace("${Address}",              unit[7], new_file)
-    text_replace("${FOP address}",          unit[8], new_file)
+    text_replace("${FOP address}",          fop_address, new_file)
     text_replace("${ID}",                   unit[10], new_file)
     text_replace("${Bank}",                 unit[11], new_file)
     text_replace("${Bank info}",            unit[13], new_file)
