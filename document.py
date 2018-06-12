@@ -2,6 +2,7 @@ from docx import Document
 from docx.shared import Inches
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
 
 
 
@@ -59,37 +60,17 @@ for name in column_names:
 
 
 while True:
-    contract_date = input("Please type the date of contract (Example - 08.05.2018):\n")
-    if len(contract_date) != 10:
+    contract_date = input("Please type the date of contract - dd.mm.yyyy (Example - 08.05.2018):\n")
+    try:
+        contract_datetime = datetime.strptime(contract_date, "%d.%m.%Y")
+        if contract_datetime.year < 2000 or contract_datetime.year > 2050:
+            print("Incorrect format")
+            continue
+    except ValueError:
         print("Incorrect format")
         continue
-    elif int(contract_date[0:2]) > 31:
-        print("Incorrect format")
-        continue
-    elif int(contract_date[0:2]) == 0:
-        print("Incorrect format")
-        continue
-    elif int(contract_date[3:5]) > 12:
-        print("Incorrect format")
-        continue
-    elif int(contract_date[3:5]) == 0:
-        print("Incorrect format")
-        continue      
-    elif contract_date[2] != ".":
-        print("Incorrect format")
-        continue
-    elif contract_date[5] != ".":
-        print("Incorrect format")
-        continue
-    elif int(contract_date[6:]) > 2050:
-        print("Incorrect format")
-        continue
-    elif int(contract_date[6:]) < 2000:
-        print("Incorrect format")
-        continue
-    else:
-        break
-
+    break
+# checker to corect date format
 
 def get_month(contract_date):
     return {
