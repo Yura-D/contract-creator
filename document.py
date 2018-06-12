@@ -52,6 +52,7 @@ while True:
         print("-", search_results[0])
         break
 
+
 row_number = 0
 for name in column_names:
     row_number = row_number + 1
@@ -110,7 +111,7 @@ def text_replace(old_text, new_text, file):
     doc.save(new_file)
 
 
-templates = ["test.docx", "Згода на обробку персональних даних.docx"]
+templates = ["test.docx", "Згода на обробку персональних даних.docx", "01 Згода на обробку персональних даних_Діпінспайр2.docx"]
 # You can put above the names of template files and it will work with it
 
 
@@ -141,9 +142,13 @@ else:
     fop_address = unit[8]
 # for using Address if there not FOP Address
 
+name_split = search_results[0].split()
+name_initials = name_split[0] + " " + name_split[1][0] + "." + name_split[2][0] + "."
+#for making name with initials
+
 for template in templates_choose:
     file_name_date = contract_date[6:10] + contract_date[2:6] + contract_date[0:2]
-    new_file = file_name_date + "-" + str(template)
+    new_file = file_name_date + " - " + str(template)
     # to create the file name with revers position of date
 
     text_replace("${Contract date}",        date_by_word, template)
@@ -162,6 +167,7 @@ for template in templates_choose:
     text_replace("${FOP ID}",               unit[15], new_file)
     text_replace("${FOP ID date}",          unit[16], new_file)
     text_replace("${Born}",                 unit[20], new_file)
+    text_replace("${Name initials}",        name_initials, new_file)
 # to replace everything that you need in the template
 
 print("Done")
