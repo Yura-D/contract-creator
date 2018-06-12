@@ -16,3 +16,4 @@
 Дата народження = ${Born}
 
 Дата контракту = ${Contract date}
+Ініціали = ${Name initials}
