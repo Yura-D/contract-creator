@@ -129,7 +129,9 @@ for s_name in search_names:
 
 def text_replace(old_text, new_text, file):
     doc = Document(file)
-    for p in doc.paragraphs:
+    
+    
+    def replace_part(old_text, new_text, p):
         if old_text in p.text:
             inline = p.runs
             # Loop added to work with runs (strings with same style)
@@ -137,6 +139,17 @@ def text_replace(old_text, new_text, file):
                 if old_text in line.text:
                     text = line.text.replace(old_text, new_text)
                     line.text = text
+
+    for p in doc.paragraphs:
+        replace_part(old_text, new_text, p)
+       
+        
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for p in cell.paragraphs:
+                    replace_part(old_text, new_text, p)
+                
     doc.save(new_file)
 
 
