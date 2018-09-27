@@ -1,2 +1,6 @@
 # Ignore file named "client_secret.json"
 client_secret.json
+# Ignore file for testing
+test.py
+03_test_file.docx
+__pycache__
