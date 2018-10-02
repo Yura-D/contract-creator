@@ -4,13 +4,14 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import os
-
+from configuration import sheet_name
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("client_secret.json", scope)
 client = gspread.authorize(creds)
 
-sheet = client.open("employee's info").sheet1
+
+sheet = client.open(sheet_name).sheet1
 
 title_name = sheet.findall("ПІБ як в паспорті")
 if len(title_name) > 1:
