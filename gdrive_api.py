@@ -1,10 +1,12 @@
 from __future__ import print_function
 from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from httplib2 import Http
-from oauth2client import file, client, tools
+from oauth2client import client, tools, file
+import io
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly'
+SCOPES = 'https://www.googleapis.com/auth/drive'
 
 def main():
     """Shows basic usage of the Drive v3 API.
@@ -29,5 +31,32 @@ def main():
         for item in items:
             print('{0} ({1})'.format(item['name'], item['id']))
 
+    """
+    # upload file
+        file_metadata = {'name': 'photo.jpeg'}
+        media = MediaFileUpload('photo.jpeg',
+                                mimetype='image/jpeg')
+        file_upload = service.files().create(body=file_metadata,
+                                            media_body=media,
+                                            fields='id').execute()
+        print('File ID: %s' % file_upload.get('id'))
+        
+    """
+
+    #download file
+    
+    file_id = '1G7AwGl4TidnX0ksy3QYL1Ay6cfzwWsjN'
+    request = service.files().get_media(fileId=file_id)
+    fh = io.BytesIO()
+    downloader = MediaIoBaseDownload(fh, request)
+    done = False
+    while done is False:
+        status, done = downloader.next_chunk()
+        print("Download %d%%." % int(status.progress() * 100))
+
+    with io.open('1ph.jpeg', 'wb') as f:
+        fh.seek(0)
+        f.write(fh.read())
+    
 if __name__ == '__main__':
     main()
