@@ -21,7 +21,7 @@ def main():
 
     # Call the Drive v3 API
     results = service.files().list(
-        pageSize=40, fields="nextPageToken, files(id, name)").execute()
+        pageSize=10, fields="nextPageToken, files(id, name)", q="'1fGkO8AuLMJIN9gL-oVxWfZNS2rTQfMnp' in parents").execute() # you can change text 'test' "name contains 'test'"
     items = results.get('files', [])
 
     if not items:
@@ -29,11 +29,14 @@ def main():
     else:
         print('Files:')
         for item in items:
+            print(item['id'])
             print('{0} ({1})'.format(item['name'], item['id']))
 
     """
     # upload file
-        file_metadata = {'name': 'photo.jpeg'}
+        folder_id = '1fGkO8AuLMJIN9gL-oVxWfZNS2rTQfMnp'
+        file_metadata = {'name': 'photo.jpeg',
+                        'parents': folder_id}
         media = MediaFileUpload('photo.jpeg',
                                 mimetype='image/jpeg')
         file_upload = service.files().create(body=file_metadata,
@@ -42,8 +45,8 @@ def main():
         print('File ID: %s' % file_upload.get('id'))
         
     """
-
-    #download file
+    """
+    #download file  
     
     file_id = '1G7AwGl4TidnX0ksy3QYL1Ay6cfzwWsjN'
     request = service.files().get_media(fileId=file_id)
@@ -57,6 +60,7 @@ def main():
     with io.open('1ph.jpeg', 'wb') as f:
         fh.seek(0)
         f.write(fh.read())
-    
+    """
+
 if __name__ == '__main__':
     main()
