@@ -36,8 +36,8 @@ def gupload(gfolder, gfile, mimetype):
 # upload file
     
     
-    file_metadata = {'name': gfile,
-                    'parents': gfolder}
+    file_metadata = {'name': [gfile],
+                    'parents': [gfolder]}
     media = MediaFileUpload(gfile,
                             mimetype=mimetype)
     file_upload = service.files().create(body=file_metadata,
@@ -57,10 +57,12 @@ def gdrive_search(gsearch):
         print('Files:')
         for item in items:
             print('* {0} - ({1})'.format(item['name'], item['id']))
-"""
+
+
+def gdownload(file_id, file_named):
     #download file  
     
-    file_id = '1G7AwGl4TidnX0ksy3QYL1Ay6cfzwWsjN'
+    
     request = service.files().get_media(fileId=file_id)
     fh = io.BytesIO()
     downloader = MediaIoBaseDownload(fh, request)
@@ -69,8 +71,9 @@ def gdrive_search(gsearch):
         status, done = downloader.next_chunk()
         print("Download %d%%." % int(status.progress() * 100))
 
-    with io.open('1ph.jpeg', 'wb') as f:
+    with io.open(file_named, 'wb') as f:
         fh.seek(0)
         f.write(fh.read())
-"""
+
+# Error: "Only files with binary content can be downloaded. Use Export with Google Docs files."
 # 1fGkO8AuLMJIN9gL-oVxWfZNS2rTQfMnp
