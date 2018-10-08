@@ -59,7 +59,7 @@ def gdrive_search(gsearch):
             print('* {0} - ({1})'.format(item['name'], item['id']))
 
 
-def gdownload(file_id, file_named):
+def gdownload(file_id, named_file):
     #download file  
     
     
@@ -71,9 +71,23 @@ def gdownload(file_id, file_named):
         status, done = downloader.next_chunk()
         print("Download %d%%." % int(status.progress() * 100))
 
-    with io.open(file_named, 'wb') as f:
+    with io.open(named_file, 'wb') as f:
         fh.seek(0)
         f.write(fh.read())
 
-# Error: "Only files with binary content can be downloaded. Use Export with Google Docs files."
+
 # 1fGkO8AuLMJIN9gL-oVxWfZNS2rTQfMnp
+
+def doc_download(file_id, named_file):
+    request = service.files().export_media(fileId=file_id,
+                                            mimeType='application/vnd.oasis.opendocument.text')
+    fh = io.BytesIO()
+    downloader = MediaIoBaseDownload(fh, request)
+    done = False
+    while done is False:
+        status, done = downloader.next_chunk()
+        print("Download %d%%." % int(status.progress() * 100))
+
+    with io.open(named_file, 'wb') as f:
+        fh.seek(0)
+        f.write(fh.read())
