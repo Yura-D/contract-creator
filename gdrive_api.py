@@ -19,7 +19,6 @@ def get_list(gfolder):
     """Shows basic usage of the Drive v3 API.
     Prints the names and ids of the first 10 files the user has access to.
     """
-    
 
     # Call the Drive v3 API
     results = service.files().list(
@@ -33,20 +32,32 @@ def get_list(gfolder):
         for item in items:
             print('* {0} - ({1})'.format(item['name'], item['id']))
 
-    """
-    # upload file
-        folder_id = '1fGkO8AuLMJIN9gL-oVxWfZNS2rTQfMnp'
-        file_metadata = {'name': 'photo.jpeg',
-                        'parents': folder_id}
-        media = MediaFileUpload('photo.jpeg',
-                                mimetype='image/jpeg')
-        file_upload = service.files().create(body=file_metadata,
-                                            media_body=media,
-                                            fields='id').execute()
-        print('File ID: %s' % file_upload.get('id'))
-        
-    """
-    """
+def gupload(gfolder, gfile, mimetype):
+# upload file
+    
+    
+    file_metadata = {'name': gfile,
+                    'parents': gfolder}
+    media = MediaFileUpload(gfile,
+                            mimetype=mimetype)
+    file_upload = service.files().create(body=file_metadata,
+                                        media_body=media,
+                                        fields='id').execute()
+    print('File ID: %s' % file_upload.get('id'))
+    
+def gdrive_search(gsearch):
+        # Call the Drive v3 API
+    results = service.files().list(
+        fields="nextPageToken, files(id, name)", q= "name contains '{0}'".format(gsearch)).execute()
+    items = results.get('files', [])
+
+    if not items:
+        print('No files found.')
+    else:
+        print('Files:')
+        for item in items:
+            print('* {0} - ({1})'.format(item['name'], item['id']))
+"""
     #download file  
     
     file_id = '1G7AwGl4TidnX0ksy3QYL1Ay6cfzwWsjN'
@@ -61,5 +72,5 @@ def get_list(gfolder):
     with io.open('1ph.jpeg', 'wb') as f:
         fh.seek(0)
         f.write(fh.read())
-    """
+"""
 # 1fGkO8AuLMJIN9gL-oVxWfZNS2rTQfMnp
