@@ -15,12 +15,11 @@ if not creds or creds.invalid:
     creds = tools.run_flow(flow, store)
 service = build('drive', 'v3', http=creds.authorize(Http()))
 
-def get_list(gfolder):
-    """Shows basic usage of the Drive v3 API.
-    Prints the names and ids of the first 10 files the user has access to.
-    """
 
+def get_list(gfolder):
     # Call the Drive v3 API
+    # get list of some folder that you need
+
     results = service.files().list(
         fields="nextPageToken, files(id, name)", q= "'{0}' in parents".format(gfolder)).execute() # you can change text 'test' "name contains 'test'"
     items = results.get('files', [])
@@ -32,21 +31,22 @@ def get_list(gfolder):
         for item in items:
             print('* {0} - ({1})'.format(item['name'], item['id']))
 
-def gupload(gfolder, gfile, mimetype):
+
+def gupload(gfolder, gfile, mimetype, path=""):
 # upload file
-    
-    
+       
     file_metadata = {'name': [gfile],
                     'parents': [gfolder]}
-    media = MediaFileUpload(gfile,
+    media = MediaFileUpload(path+gfile,
                             mimetype=mimetype)
     file_upload = service.files().create(body=file_metadata,
                                         media_body=media,
                                         fields='id').execute()
     print('File ID: %s' % file_upload.get('id'))
-    
+
+
 def gdrive_search(gsearch):
-        # Call the Drive v3 API
+    # Call the Drive v3 API
     results = service.files().list(
         fields="nextPageToken, files(id, name)", q= "name contains '{0}'".format(gsearch)).execute()
     items = results.get('files', [])
@@ -60,8 +60,7 @@ def gdrive_search(gsearch):
 
 
 def gdownload(file_id, named_file):
-    #download file  
-    
+    # download file binary file
     
     request = service.files().get_media(fileId=file_id)
     fh = io.BytesIO()
@@ -76,11 +75,11 @@ def gdownload(file_id, named_file):
         f.write(fh.read())
 
 
-# 1fGkO8AuLMJIN9gL-oVxWfZNS2rTQfMnp
-
 def doc_download(file_id, named_file):
+
+    # download docx file
     request = service.files().export_media(fileId=file_id,
-                                            mimeType='application/vnd.oasis.opendocument.text')
+                                            mimeType='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     fh = io.BytesIO()
     downloader = MediaIoBaseDownload(fh, request)
     done = False
