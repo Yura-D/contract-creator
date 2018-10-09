@@ -24,13 +24,16 @@ def get_list(gfolder):
         fields="nextPageToken, files(id, name)", q= "'{0}' in parents".format(gfolder)).execute() # you can change text 'test' "name contains 'test'"
     items = results.get('files', [])
 
+    
     if not items:
         print('No files found.')
     else:
-        print('Files:')
+        folder_list = {}
+        item_number = 0
         for item in items:
-            print('* {0} - ({1})'.format(item['name'], item['id']))
-
+            item_number += 1
+            folder_list[item_number] = [item['name'], item['id']]
+    return folder_list
 
 def gupload(gfolder, gfile, mimetype, path=""):
 # upload file
