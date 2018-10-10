@@ -4,14 +4,15 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import os
-from configuration import sheet_name, google_folder
+import configuration
+import gdrive_api
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("client_secret.json", scope)
 client = gspread.authorize(creds)
 
 
-sheet = client.open(sheet_name).sheet1
+sheet = client.open(configuration.sheet_name).sheet1
 
 title_name = sheet.findall("ПІБ як в паспорті")
 if len(title_name) > 1:
@@ -30,28 +31,28 @@ number_column_name = part_pos[c_position+1:]
 
 ### Work with templates ###
 
-templates = os.listdir("templates/")
 # You can put above the names of template files and it will work with it
 
-templates_count = 0
-templates_dict = dict()
-
 print("Templates: ")
-for example in sorted(templates):
-    templates_count = templates_count + 1
-    templates_dict[str(templates_count)] = example
-    print(templates_count, "-", example)
+templates = gdrive_api.get_list(configuration.templates_folder)
+for template in templates:
+    print(template, "-", templates[template][0])
+
 # for printing the list of all templates and create the dict with this tampletes and number of choosing
+
 
 print("\nPlease choose the files you want to fill. Use \",\" if you want few documents (Example: \"1, 5, 12\").")
 get_file = input("Choose the files: ")
 choose = get_file.split(",")
-templates_choose = list()
+templates_choose = list() # make template choose for google folder list and download the choose list
 
 for number_choose in choose:
     templates_choose.append(templates_dict.get(number_choose.strip()))
 # for choosing templates
 
+
+
+# templates = os.listdir("temp/")
 
 ### To get contract date ###
 
@@ -183,7 +184,7 @@ for r_name in search_results:
     # for creating the directorys
 
     for template in templates_choose:
-        template_path = "templates/" + template
+        template_path = "templates/" + template + "docx"
         file_name_date = contract_date[6:10] + contract_date[2:6] + contract_date[0:2]
         new_file = dir_path + file_name_date + " - " + str(template)
         # to create the file name with revers position of date
