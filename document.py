@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 import configuration
 import gdrive_api
+from re import sub
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("client_secret.json", scope)
@@ -43,11 +44,14 @@ for template in templates:
 
 print("\nPlease choose the files you want to fill. Use \",\" if you want few documents (Example: \"1, 5, 12\").")
 get_file = input("Choose the files: ")
-choose = get_file.split(",")
+choose = sub('[\s]', '', get_file)
+
 templates_choose = list() # make template choose for google folder list and download the choose list
 
-for number_choose in choose:
-    templates_choose.append(templates_dict.get(number_choose.strip()))
+for number_choose in choose.split(','):
+   gdrive_api.doc_download(templates[int(number_choose)][1], 
+                            templates[int(number_choose)][0]+'.docx')
+   # templates_choose.append(templates_dict.get(number_choose.strip()))
 # for choosing templates
 
 
