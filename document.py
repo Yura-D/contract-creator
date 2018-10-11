@@ -59,6 +59,7 @@ for number_choose in choose.split(','):
 
 
 templates_choose = os.listdir("temp/")
+templates_choose.remove(".gitignore")
 
 ### To get contract date ###
 
@@ -196,7 +197,7 @@ for r_name in search_results:
     # for creating the directorys
 
     for template in templates_choose:
-        template_path = "templates/" + template
+        template_path = "temp/" + template
         file_name_date = contract_date[6:10] + contract_date[2:6] + contract_date[0:2]
         new_file = dir_path + file_name_date + " - " + str(template)
         # to create the file name with revers position of date
