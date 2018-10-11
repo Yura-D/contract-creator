@@ -50,13 +50,15 @@ templates_choose = list() # make template choose for google folder list and down
 
 for number_choose in choose.split(','):
    gdrive_api.doc_download(templates[int(number_choose)][1], 
-                            templates[int(number_choose)][0]+'.docx')
+                            templates[int(number_choose)][0]+
+                            '.docx', 
+                            'temp'+ os.sep)
    # templates_choose.append(templates_dict.get(number_choose.strip()))
 # for choosing templates
 
 
 
-# templates = os.listdir("temp/")
+templates_choose = os.listdir("temp/")
 
 ### To get contract date ###
 
@@ -182,13 +184,19 @@ for r_name in search_results:
     name_initials = name_split[0] + " " + name_split[1][0] + "." + name_split[2][0] + "."
     #for making name with initials
 
+
+
+
+
+
+
     dir_path = "ready_to_print/" + r_name + "/"
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
     # for creating the directorys
 
     for template in templates_choose:
-        template_path = "templates/" + template + "docx"
+        template_path = "templates/" + template
         file_name_date = contract_date[6:10] + contract_date[2:6] + contract_date[0:2]
         new_file = dir_path + file_name_date + " - " + str(template)
         # to create the file name with revers position of date

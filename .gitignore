@@ -3,6 +3,4 @@ client_secret.json
 client_id.json
 token.json
 # Ignore file for testing
-test.py
-03_test_file.docx
 __pycache__
