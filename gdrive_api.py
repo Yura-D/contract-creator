@@ -78,18 +78,21 @@ def gdownload(file_id, named_file):
         f.write(fh.read())
 
 
-def doc_download(file_id, named_file):
+def doc_download(file_id, named_file, write_path):
 
     # download docx file
     request = service.files().export_media(fileId=file_id,
                                             mimeType='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    fh = io.BytesIO()
+    # fh = io.BytesIO()
+    fh = io.FileIO(write_path + named_file, mode='wb')
     downloader = MediaIoBaseDownload(fh, request)
     done = False
     while done is False:
         status, done = downloader.next_chunk()
         print("Download %d%%." % int(status.progress() * 100))
-
+    """
     with io.open(named_file, 'wb') as f:
         fh.seek(0)
-        f.write(fh.read())
+        f.write(fh.read())"""
+
+    'temp\\'
