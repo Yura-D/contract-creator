@@ -194,6 +194,7 @@ for r_name in search_results:
         upload_file = file_name_date + " - " + unit[2] + " - " + str(template)
         # to create the file name with revers position of date
 
+         # to replace everything that you need in the template
         text_replace("${Contract date}",        date_by_word, template_path)
         text_replace("${Name}",                 r_name, new_file)
         text_replace("${Passport ID}",          unit[3], new_file)
@@ -211,21 +212,20 @@ for r_name in search_results:
         text_replace("${FOP ID date}",          unit[16], new_file)
         text_replace("${Born}",                 unit[20], new_file)
         text_replace("${Name initials}",        name_initials, new_file)
-
         
-        if template == "test.docx":
-            gdrive_api.gupload(configuration.contract_folder, 
+        
+        if template in configuration.folder_dict:
+            gdrive_api.gupload(configuration.folder_dict.get(template), 
                                 upload_file, 
                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                                 'temp' + os.sep)
-        elif template == "Згода на обробку персональних даних.docx":
-            gdrive_api.gupload(configuration.personal_data_folder, 
-                                upload_file, 
-                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                                'temp' + os.sep)
+  
         else:
             print("Something wrong with replacing")
-    # to replace everything that you need in the template
+   
+
+
+### Cleaner. Remove all temp file ###
 temp_file = os.listdir('temp'+os.sep)
 temp_file.remove(".gitignore")
 
