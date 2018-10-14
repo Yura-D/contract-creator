@@ -4,14 +4,16 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import os
-from configuration import sheet_name
+import configuration
+import gdrive_api
+from re import sub
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("client_secret.json", scope)
 client = gspread.authorize(creds)
 
 
-sheet = client.open(sheet_name).sheet1
+sheet = client.open(configuration.sheet_name).sheet1
 
 title_name = sheet.findall("ПІБ як в паспорті")
 if len(title_name) > 1:
@@ -30,28 +32,34 @@ number_column_name = part_pos[c_position+1:]
 
 ### Work with templates ###
 
-templates = os.listdir("templates/")
 # You can put above the names of template files and it will work with it
 
-templates_count = 0
-templates_dict = dict()
-
 print("Templates: ")
-for example in sorted(templates):
-    templates_count = templates_count + 1
-    templates_dict[str(templates_count)] = example
-    print(templates_count, "-", example)
+templates = gdrive_api.get_list(configuration.templates_folder)
+for template in templates:
+    print(template, "-", templates[template][0])
+
 # for printing the list of all templates and create the dict with this tampletes and number of choosing
+
 
 print("\nPlease choose the files you want to fill. Use \",\" if you want few documents (Example: \"1, 5, 12\").")
 get_file = input("Choose the files: ")
-choose = get_file.split(",")
-templates_choose = list()
+choose = sub('[\s]', '', get_file)
 
-for number_choose in choose:
-    templates_choose.append(templates_dict.get(number_choose.strip()))
+templates_choose = list() # make template choose for google folder list and download the choose list
+
+for number_choose in choose.split(','):
+   gdrive_api.doc_download(templates[int(number_choose)][1], 
+                            templates[int(number_choose)][0]+
+                            '.docx', 
+                            'temp'+ os.sep)
+   # templates_choose.append(templates_dict.get(number_choose.strip()))
 # for choosing templates
 
+
+
+templates_choose = os.listdir("temp/")
+templates_choose.remove(".gitignore")
 
 ### To get contract date ###
 
@@ -177,17 +185,16 @@ for r_name in search_results:
     name_initials = name_split[0] + " " + name_split[1][0] + "." + name_split[2][0] + "."
     #for making name with initials
 
-    dir_path = "ready_to_print/" + r_name + "/"
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-    # for creating the directorys
-
+  
+  
     for template in templates_choose:
-        template_path = "templates/" + template
+        template_path = "temp" + os.sep + template
         file_name_date = contract_date[6:10] + contract_date[2:6] + contract_date[0:2]
-        new_file = dir_path + file_name_date + " - " + str(template)
+        new_file = "temp" + os.sep + file_name_date + " - " + unit[2] + " - " + str(template)
+        upload_file = file_name_date + " - " + unit[2] + " - " + str(template)
         # to create the file name with revers position of date
 
+         # to replace everything that you need in the template
         text_replace("${Contract date}",        date_by_word, template_path)
         text_replace("${Name}",                 r_name, new_file)
         text_replace("${Passport ID}",          unit[3], new_file)
@@ -205,6 +212,27 @@ for r_name in search_results:
         text_replace("${FOP ID date}",          unit[16], new_file)
         text_replace("${Born}",                 unit[20], new_file)
         text_replace("${Name initials}",        name_initials, new_file)
-    # to replace everything that you need in the template
+        
+        
+        if template in configuration.folder_dict:
+            gdrive_api.gupload(configuration.folder_dict.get(template), 
+                                upload_file, 
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                'temp' + os.sep)
+  
+        else:
+            print("Something wrong with replacing")
+   
+
+
+### Cleaner. Remove all temp file ###
+temp_file = os.listdir('temp'+os.sep)
+temp_file.remove(".gitignore")
+
+for file in temp_file:
+    if os.path.exists('temp' + os.sep + file):
+        os.remove('temp' + os.sep + file)
+    else:
+        print("Something wrong with removing files")
 
 print("\nDone")
