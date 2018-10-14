@@ -1,4 +1,5 @@
-sheet_name = "Реєстр :: Список підрядників"
+sheet_name = "employee's info"
+# "Реєстр :: Список підрядників"
 # "employee's info"
 google_folder = "1fGkO8AuLMJIN9gL-oVxWfZNS2rTQfMnp"
 templates_folder = "1UszkdJsg2p68ZdJqicn7woWZbo6rXHjY"

@@ -185,21 +185,13 @@ for r_name in search_results:
     name_initials = name_split[0] + " " + name_split[1][0] + "." + name_split[2][0] + "."
     #for making name with initials
 
-
-
-
-
-
-
-    dir_path = "ready_to_print/" + r_name + "/"
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-    # for creating the directorys
-
+  
+  
     for template in templates_choose:
-        template_path = "temp/" + template
+        template_path = "temp" + os.sep + template
         file_name_date = contract_date[6:10] + contract_date[2:6] + contract_date[0:2]
-        new_file = dir_path + file_name_date + " - " + str(template)
+        new_file = "temp" + os.sep + file_name_date + " - " + unit[2] + " - " + str(template)
+        upload_file = file_name_date + " - " + unit[2] + " - " + str(template)
         # to create the file name with revers position of date
 
         text_replace("${Contract date}",        date_by_word, template_path)
@@ -219,6 +211,28 @@ for r_name in search_results:
         text_replace("${FOP ID date}",          unit[16], new_file)
         text_replace("${Born}",                 unit[20], new_file)
         text_replace("${Name initials}",        name_initials, new_file)
+
+        
+        if template == "test.docx":
+            gdrive_api.gupload(configuration.contract_folder, 
+                                upload_file, 
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                'temp' + os.sep)
+        elif template == "Згода на обробку персональних даних.docx":
+            gdrive_api.gupload(configuration.personal_data_folder, 
+                                upload_file, 
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                'temp' + os.sep)
+        else:
+            print("Something wrong with replacing")
     # to replace everything that you need in the template
+temp_file = os.listdir('temp'+os.sep)
+temp_file.remove(".gitignore")
+
+for file in temp_file:
+    if os.path.exists('temp' + os.sep + file):
+        os.remove('temp' + os.sep + file)
+    else:
+        print("Something wrong with removing files")
 
 print("\nDone")
