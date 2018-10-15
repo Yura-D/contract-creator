@@ -13,7 +13,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_name("client_secret.json", s
 client = gspread.authorize(creds)
 
 
-sheet = client.open(configuration.sheet_name).sheet1
+sheet = client.open(configuration.sheet_name).get_worksheet(configuration.sheet_list)
 
 title_name = sheet.findall("ПІБ як в паспорті")
 if len(title_name) > 1:
@@ -161,6 +161,16 @@ def text_replace(old_text, new_text, file):
                 
     doc.save(new_file)
 
+# To open register sheets
+register_green = client.open_by_key(
+                configuration.register_sheet_green).get_worksheet(
+                configuration.green_sheet_list)
+register_blue = client.open_by_key(
+                configuration.register_sheet_blue).get_worksheet(
+                configuration.blue_sheet_list)
+register_red = client.open_by_key(
+                configuration.register_sheet_red).get_worksheet(
+                configuration.red_sheet_list)
 
 ### To create contracts ###
 print("\nList of emploees:")
@@ -219,10 +229,12 @@ for r_name in search_results:
                                 upload_file, 
                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                                 'temp' + os.sep)
-  
         else:
             print("Something wrong with replacing")
-   
+
+somelist = ["Yura", "test", "23.01.2011", "", "Done"]
+
+register_blue.append_row(somelist)
 
 
 ### Cleaner. Remove all temp file ###
