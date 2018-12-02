@@ -4,14 +4,15 @@ from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from httplib2 import Http
 from oauth2client import client, tools, file
 import io
+import configuration
 
 # If modifying these scopes, delete the file token.json.
 # Authorization to Google drive with personal token
 SCOPES = 'https://www.googleapis.com/auth/drive'
-store = file.Storage('token.json')
+store = file.Storage(configuration.drive_token)
 creds = store.get()
 if not creds or creds.invalid:
-    flow = client.flow_from_clientsecrets('client_id.json', SCOPES)
+    flow = client.flow_from_clientsecrets(configuration.client_id, SCOPES)
     creds = tools.run_flow(flow, store)
 service = build('drive', 'v3', http=creds.authorize(Http()))
 
@@ -21,7 +22,8 @@ def get_list(gfolder):
     # get list of some folder that you need
 
     results = service.files().list(
-        fields="nextPageToken, files(id, name)", q= "'{0}' in parents".format(gfolder)).execute() # you can change text 'test' "name contains 'test'"
+        fields="nextPageToken, files(id, name)", q= "'{0}' in parents".format(gfolder)).execute() 
+                                # you can change text 'test' "name contains 'test'"
     items = results.get('files', [])
 
     

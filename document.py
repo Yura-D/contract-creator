@@ -9,7 +9,7 @@ import gdrive_api
 from re import sub
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("client_secret.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(configuration.secret, scope)
 client = gspread.authorize(creds)
 
 
@@ -171,6 +171,12 @@ register_blue = client.open_by_key(
 register_red = client.open_by_key(
                 configuration.register_sheet_red).get_worksheet(
                 configuration.red_sheet_list)
+reg_use = {
+    "register_green": register_green,
+    "register_blue": register_blue,
+    "register_red": register_red
+}
+
 
 ### To create contracts ###
 print("\nList of emploees:")
@@ -231,11 +237,14 @@ for r_name in search_results:
                                 'temp' + os.sep)
         else:
             print("Something wrong with replacing")
-
-somelist = ["Yura", "test", "23.01.2011", "", "Done"]
-
-register_blue.append_row(somelist)
-
+# to create note into register
+        register_list = [unit[2], template, file_name_date, "", "Done"]
+        
+        choose_reg = configuration.register_dict[template]
+        register = reg_use[choose_reg]
+        
+        register.insert_row(register_list, 2)
+    
 
 ### Cleaner. Remove all temp file ###
 temp_file = os.listdir('temp'+os.sep)
