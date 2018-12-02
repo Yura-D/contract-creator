@@ -9,11 +9,11 @@ import gdrive_api
 from re import sub
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("client_secret.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(configuration.secret, scope)
 client = gspread.authorize(creds)
 
 
-sheet = client.open(configuration.sheet_name).sheet1
+sheet = client.open(configuration.sheet_name).get_worksheet(configuration.sheet_list)
 
 title_name = sheet.findall("ПІБ як в паспорті")
 if len(title_name) > 1:
@@ -161,6 +161,22 @@ def text_replace(old_text, new_text, file):
                 
     doc.save(new_file)
 
+# To open register sheets
+register_green = client.open_by_key(
+                configuration.register_sheet_green).get_worksheet(
+                configuration.green_sheet_list)
+register_blue = client.open_by_key(
+                configuration.register_sheet_blue).get_worksheet(
+                configuration.blue_sheet_list)
+register_red = client.open_by_key(
+                configuration.register_sheet_red).get_worksheet(
+                configuration.red_sheet_list)
+reg_use = {
+    "register_green": register_green,
+    "register_blue": register_blue,
+    "register_red": register_red
+}
+
 
 ### To create contracts ###
 print("\nList of emploees:")
@@ -219,11 +235,16 @@ for r_name in search_results:
                                 upload_file, 
                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                                 'temp' + os.sep)
-  
         else:
             print("Something wrong with replacing")
-   
-
+# to create note into register
+        register_list = [unit[2], template, file_name_date, "", "Done"]
+        
+        choose_reg = configuration.register_dict[template]
+        register = reg_use[choose_reg]
+        
+        register.insert_row(register_list, 2)
+    
 
 ### Cleaner. Remove all temp file ###
 temp_file = os.listdir('temp'+os.sep)
